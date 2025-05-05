@@ -15,7 +15,7 @@ int	check_extension(char *filename)
 	dot = ft_strrchr(filename, '.');
 	if (!dot || dot == filename)
 		return (0);
-	return (ft_strcmp(dot, ".ber") == 0);
+	return (ft_strncmp(dot, ".ber", 10) == 0);
 }
 
 int	read_map_line(t_map *map, int fd)
