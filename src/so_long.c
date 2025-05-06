@@ -12,26 +12,34 @@
 
 #include "so_long.h"
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+/*void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
-}
+}*/
 
-int	main(void)
+int	main(int argc, char **argv)
 {
-	void	*mlx;
-	void	*mlx_win;
-	t_data	img;
+	t_game	game;
 
-	mlx = mlx_init();
-	mlx_win = mlx_new_window(mlx, 1920, 1080, "Hello world!");
-	img.img = mlx_new_image(mlx, 1920, 1080);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-								&img.endian);
-	my_mlx_pixel_put(&img, 5, 5, 0x00FF0000);
-	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-	mlx_loop(mlx);
+	if (argc != 2)
+	{
+		ft_putstr_fd("Error\nUsage: ./so_long map_file.ber\n", 2);
+		return (1);
+	}
+	
+	if (!init_game(&game, argv[1]))
+	{
+		ft_putstr_fd("Error\nFailed to initialize the game\n", 2);
+		return (1);
+	}
+	
+	mlx_loop_hook(game.mlx, game_loop, &game);
+	mlx_hook(game.win, 2, 1L << 0, key_press, &game);
+	mlx_hook(game.win, 17, 0, close_window, &game);
+	
+	mlx_loop(game.mlx);
+	return (0);
 }
