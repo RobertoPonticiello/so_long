@@ -23,26 +23,53 @@ int	read_map_line(t_map *map, int fd)
 	char	*line;
 	char	**temp;
 	int		i;
+	size_t	line_len;
 
 	line = get_next_line(fd);
 	if (!line)
 		return (0);
+	
+	line_len = ft_strlen(line);
+	
+	// Se la riga termina con newline, rimuovilo
+	if (line_len > 0 && line[line_len - 1] == '\n')
+	{
+		line[line_len - 1] = '\0';
+		line_len--;
+	}
+	
+	// Se è la prima riga, salviamo la larghezza
 	if (map->width == 0)
-		map->width = ft_strlen(line) - 1;
+		map->width = line_len;
+	
 	temp = (char **)malloc(sizeof(char *) * (map->height + 2));
 	if (!temp)
+	{
+		free(line);
 		return (0);
+	}
+	
 	i = 0;
 	while (i < map->height)
 	{
 		temp[i] = map->grid[i];
 		i++;
 	}
-	line[ft_strlen(line) - 1] = '\0';
+	
 	temp[i] = ft_strdup(line);
+	if (!temp[i])
+	{
+		free(line);
+		free(temp);
+		return (0);
+	}
+	
 	temp[i + 1] = NULL;
 	free(line);
-	free(map->grid);
+	
+	if (map->grid)
+		free(map->grid);
+	
 	map->grid = temp;
 	map->height++;
 	return (1);
