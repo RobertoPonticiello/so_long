@@ -37,7 +37,7 @@ int	main(int argc, char **argv)
 	}
 	
 	mlx_loop_hook(game.mlx, game_loop, &game);
-	mlx_hook(game.win, 2, 1L << 0, key_press, &game);
+	mlx_key_hook(game.win, key_press, &game);
 	mlx_hook(game.win, 17, 0, close_window, &game);
 	
 	mlx_loop(game.mlx);

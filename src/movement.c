@@ -119,22 +119,19 @@ void	move_enemies(t_game *game)
 	game->enemy_frame = (game->enemy_frame + 1) % 2;
 }
 
-int	key_press(int keycode, t_game *game)
+int key_press(int keycode, t_game *game)
 {
-	if (keycode == 53) // ESC key
-		close_window(game);
-		
-	if (game->game_over)
-		return (0);
-		
-	if (keycode == 13 || keycode == 126) // W o freccia su
-		move_player(game, game->map.player_x, game->map.player_y - 1);
-	else if (keycode == 1 || keycode == 125) // S o freccia giù
-		move_player(game, game->map.player_x, game->map.player_y + 1);
-	else if (keycode == 0 || keycode == 123) // A o freccia sinistra
-		move_player(game, game->map.player_x - 1, game->map.player_y);
-	else if (keycode == 2 || keycode == 124) // D o freccia destra
-		move_player(game, game->map.player_x + 1, game->map.player_y);
-		
-	return (0);
+    if (keycode == KEY_ESC)
+        close_window(game);
+    if (game->game_over)
+        return (0);
+    if (keycode == KEY_W || keycode == KEY_UP)
+        move_player(game, game->map.player_x, game->map.player_y - 1);
+    else if (keycode == KEY_S || keycode == KEY_DOWN)
+        move_player(game, game->map.player_x, game->map.player_y + 1);
+    else if (keycode == KEY_A || keycode == KEY_LEFT)
+        move_player(game, game->map.player_x - 1, game->map.player_y);
+    else if (keycode == KEY_D || keycode == KEY_RIGHT)
+        move_player(game, game->map.player_x + 1, game->map.player_y);
+    return (0);
 }
