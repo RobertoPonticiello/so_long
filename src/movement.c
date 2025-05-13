@@ -1,5 +1,4 @@
 #include "so_long.h"
-
 int	check_enemy_collision(t_game *game, int x, int y)
 {
 	int	i;
@@ -18,30 +17,31 @@ void	move_player(t_game *game, int new_x, int new_y)
 {
 	if (game->game_over)
 		return ;
-		
-	if (new_x < 0 || new_y < 0 || new_x >= game->map.width
+
+	if (new_x < 0 || new_y < 0
+		|| new_x >= game->map.width
 		|| new_y >= game->map.height)
 		return ;
-		
+
 	if (game->map.grid[new_y][new_x] == '1')
 		return ;
-		
-	// Controlla collisione con i nemici
+
+	// Collisione con i nemici
 	if (check_enemy_collision(game, new_x, new_y))
 	{
 		game->game_over = 1;
 		ft_putstr_fd("Game Over! You hit an enemy.\n", 1);
 		return ;
 	}
-	
-	// Gestione dei collezionabili
+
+	// Raccogli collezionabile
 	if (game->map.grid[new_y][new_x] == 'C')
 	{
 		game->map.grid[new_y][new_x] = '0';
 		game->collected++;
 	}
-	
-	// Gestione dell'uscita
+
+	// Gestione uscita
 	if (game->map.grid[new_y][new_x] == 'E')
 	{
 		if (game->collected == game->map.collectibles)
@@ -52,23 +52,27 @@ void	move_player(t_game *game, int new_x, int new_y)
 		else
 			return ;
 	}
-	
-	// Aggiorna la posizione del giocatore
+
+	// Aggiorna la mappa e la posizione del giocatore
 	game->map.grid[game->map.player_y][game->map.player_x] = '0';
 	game->map.grid[new_y][new_x] = 'P';
 	game->map.player_x = new_x;
 	game->map.player_y = new_y;
-	
+
 	// Incrementa il contatore delle mosse
 	game->moves++;
-	
-	// Aggiorna l'animazione del giocatore
-	game->player_frame = (game->player_frame + 1) % 4;
+
+	// *** STAMPA ANCHE IN TERMINALE ***
+	printf("Moves: %d\n", game->moves);
+
+	// L’aggiornamento grafico avviene in game_loop() tramite render_game()
 }
 
 int	check_wall(t_game *game, int x, int y)
 {
-	if (x < 0 || y < 0 || x >= game->map.width || y >= game->map.height)
+	if (x < 0 || y < 0
+		|| x >= game->map.width
+		|| y >= game->map.height)
 		return (1);
 	return (game->map.grid[y][x] == '1');
 }

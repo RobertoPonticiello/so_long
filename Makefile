@@ -1,16 +1,7 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: rpontici <rpontici@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/05/03 15:26:04 by rpontici          #+#    #+#              #
-#    Updated: 2025/05/04 16:35:25 by rpontici         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME := so_long
+
+# Imposto all come default goal
+.DEFAULT_GOAL := all
 
 # Compiler and flags
 CC := gcc
@@ -41,7 +32,9 @@ $(LIBFT):
 
 # Link rule
 $(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(OBJ) -L$(MLX_DIR) -lmlx_Linux -L$(LIBFT_DIR) -lft -L/usr/lib -I$(MLX_DIR) -lXext -lX11 -lm -lz -o $(NAME)
+	$(CC) $(OBJ) -L$(MLX_DIR) -lmlx_Linux \
+	      -L$(LIBFT_DIR) -lft -L/usr/lib -lXext -lX11 -lm -lz \
+	      -o $(NAME)
 
 all: $(NAME)
 
