@@ -1,69 +1,63 @@
 #include "so_long.h"
 
-int	close_window(t_game *game)
+static void	free_map(char **grid, int height)
 {
 	int	i;
 
-	if (!game)
-		exit(0);
-		
-	// Libera le immagini
-	if (game->img_wall.img)
-		mlx_destroy_image(game->mlx, game->img_wall.img);
-	if (game->img_floor.img)
-		mlx_destroy_image(game->mlx, game->img_floor.img);
-	if (game->img_collect.img)
-		mlx_destroy_image(game->mlx, game->img_collect.img);
-	if (game->img_exit.img)
-		mlx_destroy_image(game->mlx, game->img_exit.img);
-	
-	// Libera le animazioni del giocatore
+	if (!grid)
+		return ;
+	i = 0;
+	while (i < height)
+	{
+		free(grid[i]);
+		i++;
+	}
+	free(grid);
+}
+
+// Libera tutte le immagini caricate da MLX
+static void	free_images(t_game *game)
+{
+	int	i;
+
+	if (!game || !game->mlx)
+		return ;
+	mlx_destroy_image(game->mlx, game->img_wall.img);
+	mlx_destroy_image(game->mlx, game->img_floor.img);
+	mlx_destroy_image(game->mlx, game->img_collect.img);
+	mlx_destroy_image(game->mlx, game->img_exit.img);
 	i = 0;
 	while (i < 4)
-	{
-		if (game->img_player[i].img)
-			mlx_destroy_image(game->mlx, game->img_player[i].img);
-		i++;
-	}
-	
-	// Libera le animazioni dei nemici
+		mlx_destroy_image(game->mlx, game->img_player[i++].img);
 	i = 0;
 	while (i < 2)
-	{
-		if (game->img_enemy[i].img)
-			mlx_destroy_image(game->mlx, game->img_enemy[i].img);
-		i++;
-	}
-	
-	// Libera la mappa
-	if (game->map.grid)
-	{
-		i = 0;
-		while (i < game->map.height)
-		{
-			if (game->map.grid[i])
-				free(game->map.grid[i]);
-			i++;
-		}
-		free(game->map.grid);
-	}
-	
-	// Libera l'array dei nemici
-	if (game->enemies)
-		free(game->enemies);
-	
-	// Distruggi la finestra e termina MLX
-	if (game->win && game->mlx)
+		mlx_destroy_image(game->mlx, game->img_enemy[i++].img);
+}
+
+// Pulizia di TUTTE le risorse ALLOCATE su heap (ma NON il struct game, che è sullo stack)
+void	cleanup_game(t_game *game)
+{
+	if (!game)
+		return ;
+	free_images(game);
+	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
-	
-	// Chiudi e libera mlx (necessario su alcuni sistemi)
 	if (game->mlx)
 	{
-		// Su macOS puoi chiamare:
-		// mlx_destroy_display(game->mlx);
+		mlx_destroy_display(game->mlx);
 		free(game->mlx);
 	}
-	
+	free_map(game->map.grid, game->map.height);
+	if (game->enemies)
+		free(game->enemies);
+}
+
+// Callback per la “X” della finestra o per exit dall’evento DestroyNotify
+int	close_window(t_game *game)
+{
+	if (!game)
+		exit(0);
+	cleanup_game(game);
 	exit(0);
 	return (0);
 }

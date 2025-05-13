@@ -27,39 +27,63 @@ int	process_character(t_map *map, char c, int i, int j)
 		return (-1);
 }
 
-int	check_map_elements(t_map *map)
+static int	traverse_map(t_map *map,
+				int *player_count,
+				int *exit_count,
+				int *collectible_count)
 {
-	int	i;
-	int	j;
-	int	player_count;
-	int	exit_count;
-	int	collectible_count;
+	int	 i;
+	int	 j;
+	char	 c;
 
 	i = 0;
-	player_count = 0;
-	exit_count = 0;
-	collectible_count = 0;
 	while (i < map->height)
 	{
 		j = 0;
 		while (j < map->width)
 		{
-			if (map->grid[i][j] == 'P')
-				player_count++;
-			else if (map->grid[i][j] == 'E')
-				exit_count++;
-			else if (map->grid[i][j] == 'C')
-				collectible_count++;
-			if (process_character(map, map->grid[i][j], i, j) < 0)
-				return (error_message("Invalid character in map"));
+			c = map->grid[i][j];
+			if (c == 'P')
+				(*player_count)++;
+			else if (c == 'E')
+				(*exit_count)++;
+			else if (c == 'C')
+				(*collectible_count)++;
+			if (process_character(map, c, i, j) < 0)
+				return (-1);
 			j++;
 		}
 		i++;
 	}
-	map->collectibles = collectible_count;
-	if (player_count != 1 || exit_count != 1 || collectible_count < 1)
+	return (0);
+}
+
+// Controlla che ci sia esattamente 1 player, 1 exit e ≥1 collectible
+static int	validate_counts(int p, int e, int c)
+{
+	if (p != 1 || e != 1 || c < 1)
 		return (error_message("Invalid number of elements"));
 	return (1);
+}
+
+int	check_map_elements(t_map *map)
+{
+	int	player_count;
+	int	exit_count;
+	int	collectible_count;
+
+	player_count = 0;
+	exit_count = 0;
+	collectible_count = 0;
+	if (traverse_map(map,
+			&player_count,
+			&exit_count,
+			&collectible_count) < 0)
+		return (error_message("Invalid character in map"));
+	map->collectibles = collectible_count;
+	return (validate_counts(player_count,
+				exit_count,
+				collectible_count));
 }
 
 char	**copy_map(t_map *map)
