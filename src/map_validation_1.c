@@ -18,63 +18,6 @@ int	check_extension(char *filename)
 	return (ft_strncmp(dot, ".ber", 10) == 0);
 }
 
-int	read_map_line(t_map *map, int fd)
-{
-	char	*line;
-	char	**temp;
-	int		i;
-	size_t	line_len;
-
-	line = get_next_line(fd);
-	if (!line)
-		return (0);
-	
-	line_len = ft_strlen(line);
-	
-	// Se la riga termina con newline, rimuovilo
-	if (line_len > 0 && line[line_len - 1] == '\n')
-	{
-		line[line_len - 1] = '\0';
-		line_len--;
-	}
-	
-	// Se è la prima riga, salviamo la larghezza
-	if (map->width == 0)
-		map->width = line_len;
-	
-	temp = (char **)malloc(sizeof(char *) * (map->height + 2));
-	if (!temp)
-	{
-		free(line);
-		return (0);
-	}
-	
-	i = 0;
-	while (i < map->height)
-	{
-		temp[i] = map->grid[i];
-		i++;
-	}
-	
-	temp[i] = ft_strdup(line);
-	if (!temp[i])
-	{
-		free(line);
-		free(temp);
-		return (0);
-	}
-	
-	temp[i + 1] = NULL;
-	free(line);
-	
-	if (map->grid)
-		free(map->grid);
-	
-	map->grid = temp;
-	map->height++;
-	return (1);
-}
-
 int	read_map(t_map *map, char *filename)
 {
 	int	fd;
@@ -114,8 +57,8 @@ int	check_map_structure(t_map *map)
 		j = 0;
 		while (j < map->width)
 		{
-			if ((i == 0 || i == map->height - 1 || j == 0 || j == map->width - 1)
-				&& map->grid[i][j] != '1')
+			if ((i == 0 || i == map->height - 1 || j == 0 || j == map->width
+					- 1) && map->grid[i][j] != '1')
 				return (error_message("Map is not surrounded by walls"));
 			j++;
 		}

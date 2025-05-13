@@ -2,8 +2,8 @@
 
 void	put_image(t_game *game, void *img, int x, int y)
 {
-	mlx_put_image_to_window(game->mlx, game->win, img,
-		x * TILE_SIZE, y * TILE_SIZE);
+	mlx_put_image_to_window(game->mlx, game->win, img, x * TILE_SIZE, y
+		* TILE_SIZE);
 }
 
 void	render_tile(t_game *game, int x, int y)
@@ -12,7 +12,6 @@ void	render_tile(t_game *game, int x, int y)
 
 	tile = game->map.grid[y][x];
 	put_image(game, game->img_floor.img, x, y);
-	
 	if (tile == '1')
 		put_image(game, game->img_wall.img, x, y);
 	else if (tile == 'C')
@@ -30,8 +29,8 @@ void	render_enemies(t_game *game)
 	i = 0;
 	while (i < game->map.enemies)
 	{
-		put_image(game, game->img_floor.img,
-			game->enemies[i].x, game->enemies[i].y);
+		put_image(game, game->img_floor.img, game->enemies[i].x,
+			game->enemies[i].y);
 		put_image(game, game->img_enemy[game->enemy_frame].img,
 			game->enemies[i].x, game->enemies[i].y);
 		i++;
@@ -46,13 +45,10 @@ void	render_moves(t_game *game)
 	moves_str = ft_itoa(game->moves);
 	if (!moves_str)
 		return ;
-		
 	display = ft_strjoin("Moves: ", moves_str);
 	free(moves_str);
-	
 	if (!display)
 		return ;
-		
 	// Disegna un rettangolo nero sopra dove sarà mostrato il testo
 	mlx_string_put(game->mlx, game->win, 10, 20, 0x00FFFFFF, display);
 	free(display);
@@ -60,8 +56,8 @@ void	render_moves(t_game *game)
 
 void	render_game(t_game *game)
 {
-	int	x;
-	int	y;
+	int x;
+	int y;
 
 	y = 0;
 	while (y < game->map.height)
@@ -74,7 +70,7 @@ void	render_game(t_game *game)
 		}
 		y++;
 	}
-	
+
 	render_enemies(game);
 	render_moves(game);
 }

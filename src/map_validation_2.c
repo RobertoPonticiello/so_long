@@ -27,14 +27,12 @@ int	process_character(t_map *map, char c, int i, int j)
 		return (-1);
 }
 
-static int	traverse_map(t_map *map,
-				int *player_count,
-				int *exit_count,
-				int *collectible_count)
+static int	traverse_map(t_map *map, int *player_count, int *exit_count,
+		int *collectible_count)
 {
-	int	 i;
-	int	 j;
-	char	 c;
+	int		i;
+	int		j;
+	char	c;
 
 	i = 0;
 	while (i < map->height)
@@ -75,15 +73,10 @@ int	check_map_elements(t_map *map)
 	player_count = 0;
 	exit_count = 0;
 	collectible_count = 0;
-	if (traverse_map(map,
-			&player_count,
-			&exit_count,
-			&collectible_count) < 0)
+	if (traverse_map(map, &player_count, &exit_count, &collectible_count) < 0)
 		return (error_message("Invalid character in map"));
 	map->collectibles = collectible_count;
-	return (validate_counts(player_count,
-				exit_count,
-				collectible_count));
+	return (validate_counts(player_count, exit_count, collectible_count));
 }
 
 char	**copy_map(t_map *map)
@@ -107,30 +100,4 @@ char	**copy_map(t_map *map)
 	}
 	temp[i] = NULL;
 	return (temp);
-}
-
-void	free_temp_map(char **map, int height)
-{
-	int	i;
-
-	i = 0;
-	while (i < height)
-	{
-		free(map[i]);
-		i++;
-	}
-	free(map);
-}
-
-void	flood_fill(char **map, int x, int y, t_map *original)
-{
-	if (x < 0 || y < 0 || x >= original->width || y >= original->height)
-		return ;
-	if (map[y][x] == '1' || map[y][x] == 'F')
-		return ;
-	map[y][x] = 'F';
-	flood_fill(map, x + 1, y, original);
-	flood_fill(map, x - 1, y, original);
-	flood_fill(map, x, y + 1, original);
-	flood_fill(map, x, y - 1, original);
 }
