@@ -40,3 +40,33 @@ int	is_valid_position(t_game *game, int new_x, int new_y)
 		return (0);
 	return (1);
 }
+
+int	load_image(t_game *game, t_img *img, char *path)
+{
+	if (!game || !img || !path)
+		return (0);
+	img->img = mlx_xpm_file_to_image(game->mlx, path, &img->width,
+			&img->height);
+	if (!img->img)
+	{
+		ft_putstr_fd("Error\nFailed to load image: ", 2);
+		ft_putstr_fd(path, 2);
+		ft_putstr_fd("\n", 2);
+		return (0);
+	}
+	return (1);
+}
+
+void	init_images(t_game *game)
+{
+	load_image(game, &game->img_wall, "textures/wall.xpm");
+	load_image(game, &game->img_floor, "textures/floor.xpm");
+	load_image(game, &game->img_collect, "textures/collectible.xpm");
+	load_image(game, &game->img_exit, "textures/exit.xpm");
+	load_image(game, &game->img_player[0], "textures/player1.xpm");
+	load_image(game, &game->img_player[1], "textures/player2.xpm");
+	load_image(game, &game->img_player[2], "textures/player3.xpm");
+	load_image(game, &game->img_player[3], "textures/player4.xpm");
+	load_image(game, &game->img_enemy[0], "textures/enemy1.xpm");
+	load_image(game, &game->img_enemy[1], "textures/enemy2.xpm");
+}

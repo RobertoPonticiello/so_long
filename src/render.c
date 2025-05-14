@@ -49,15 +49,14 @@ void	render_moves(t_game *game)
 	free(moves_str);
 	if (!display)
 		return ;
-	// Disegna un rettangolo nero sopra dove sarà mostrato il testo
 	mlx_string_put(game->mlx, game->win, 10, 20, 0x00FFFFFF, display);
 	free(display);
 }
 
 void	render_game(t_game *game)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	y = 0;
 	while (y < game->map.height)
@@ -70,7 +69,6 @@ void	render_game(t_game *game)
 		}
 		y++;
 	}
-
 	render_enemies(game);
 	render_moves(game);
 }

@@ -50,14 +50,10 @@ void	move_player(t_game *game, int new_x, int new_y)
 {
 	if (!is_valid_position(game, new_x, new_y))
 		return ;
-
 	if (handle_enemy_collision(game, new_x, new_y))
 		return ;
-
 	handle_collectible(game, new_x, new_y);
-
 	if (!handle_exit(game, new_x, new_y))
 		return ;
-
 	update_player_position(game, new_x, new_y);
 }

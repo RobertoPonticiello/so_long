@@ -108,6 +108,7 @@ int					error_message(char *msg);
 void				free_temp_map(char **map, int height);
 int					init_game(t_game *game, char *map_file);
 void				init_images(t_game *game);
+int					init_enemies(t_game *game);
 void				cleanup_game(t_game *game);
 void				render_game(t_game *game);
 void				render_moves(t_game *game);
@@ -122,6 +123,7 @@ int					is_valid_position(t_game *game, int new_x, int new_y);
 int					read_map_line(t_map *map, int fd);
 int					close_window(t_game *game);
 int					game_loop(t_game *game);
+void				count_enemies(t_game *game);
 
 // GET NEXT LINE
 typedef struct s_chunk
